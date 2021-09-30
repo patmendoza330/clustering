@@ -28,23 +28,18 @@ dim(y)
 
 egREFSEQ <- toTable(org.Hs.egREFSEQ)
 
-head(egREFSEQ)
-
 m <- match(y$genes$RefSeqID, egREFSEQ$accession)
 y$genes$EntrezGene <- egREFSEQ$gene_id[m]
 
 egSYMBOL <- toTable(org.Hs.egSYMBOL)
-head(egSYMBOL)
 
 m <- match(y$genes$EntrezGene, egSYMBOL$gene_id)
 y$genes$Symbol <- egSYMBOL$symbol[m]
-head(y$genes)
 
 o <- order(rowSums(y$counts), decreasing=TRUE)
 y <- y[o,]
 d <- duplicated(y$genes$Symbol)
 y <- y[!d,]
-nrow(y)
 
 y$samples$lib.size <- colSums(y$counts)
 
@@ -52,9 +47,6 @@ rownames(y$counts) <- rownames(y$genes) <- y$genes$EntrezGene
 y$genes$EntrezGene <- NULL
 
 y <- calcNormFactors(y)
-y$samples
-
-plotMDS(y)
 # END Block of code is from the edgeR user guide case study 4.1
 
 # Get data for the PCoA and the PCA
@@ -70,13 +62,11 @@ pca.data <- pca$x
 # formatting the PCoA data
 colnames(pcoa.data) <- c("x", "y")
 pcoa.data <- as.data.frame(pcoa.data)
-# convert rownames to a column
 pcoa.data <- tibble::rownames_to_column(pcoa.data, "patient.cell")
-
 pcoa.data <- pcoa.data %>%
   separate(col = "patient.cell", into = c('patient', 'cell'), sep = -1) %>%
   mutate(cell.de = case_when(cell =="N" ~ "Normal", 
-                               cell == "T" ~ "Cancer"))
+                             cell == "T" ~ "Cancer"))
 
 #Formatting the PCA data
 pca.data <- as.data.frame(pca.data)
@@ -88,13 +78,13 @@ pca.data <- pca.data %>%
 
 # We need to obtain the percentages for each of the principal components
 percentage <- round(pca$sdev^2 / sum(pca$sdev^2) * 100, 2)
-#give column names to the percentage
 percentage <- paste(colnames(pca$x), "(", 
                     paste(as.character(percentage), "%", ")", sep="") )
 
 
+#PCoA
 png(filename1, height = 1200, width = 1200)
-p <- ggplot(pcoa.data1, aes(x = x, y = y, colour = cell.de)) +
+p <- ggplot(pcoa.data, aes(x = x, y = y, colour = cell.de)) +
   geom_point(aes(shape=cell.de, color=cell.de), size = 12) + 
   geom_text_repel(aes(label = patient), size=10, 
                   max.overlaps = Inf, show.legend = FALSE, 
@@ -111,9 +101,9 @@ p <- ggplot(pcoa.data1, aes(x = x, y = y, colour = cell.de)) +
 print(p)
 dev.off()
 
-
+#PCA
 png(filename2, height = 1200, width = 1200)
-p <- ggplot(pca.data1, aes(x = PC1, y = PC2, colour = cell.de)) +
+p <- ggplot(pca.data, aes(x = PC1, y = PC2, colour = cell.de)) +
   geom_point(aes(shape=cell.de, color=cell.de), size = 12) + 
   geom_text_repel(aes(label = patient), size=10, max.overlaps = Inf, 
                   show.legend = FALSE, colour = "black", 
@@ -130,7 +120,7 @@ p <- ggplot(pca.data1, aes(x = PC1, y = PC2, colour = cell.de)) +
 print(p)
 dev.off()
 
-
+#Scree plot
 png(filename3, height = 1200, width = 1200)
 p <- fviz_eig(pca) + 
   theme(text=element_text(size=35), axis.title = element_text(size=42), 
