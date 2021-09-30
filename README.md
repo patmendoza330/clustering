@@ -1,8 +1,8 @@
-# Clustering samples with a PCoA and PCA using edgeR and ggplot
+# Clustering samples with a PCoA and PCA using edgeR, prcomp, and ggplot
 
 Oftentimes, we'll need to create an aesthetically pleasing plot that will cluster samples based on a certain criteria (e.g. correlation). 
 
-This tutorial will explain how to take the values obtained from a PCoA (principal coordinate analysis) and PCA (principal component analysis) within the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package and `plotMDS` function and plot in ggplot2.
+This tutorial will explain how to take the values obtained from a PCoA (principal coordinate analysis) and PCA (principal component analysis) and plot in ggplot2. The PCoA is using the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package (plotMDS function) and the PCA is using the prcomp function.
 
 In other words, how to convert something like this:
 
@@ -18,18 +18,20 @@ and this:
 
 with the PCA associated scree:
 
-<img src="images/pca.scree.png" alt="final pca image" width=200>
+<img src="images/pca.scree.png" alt="final pca image" width=400>
 
 
 ## Brief discussion of PCoA and PCA
 
-A PCA is a subset of PCoA. For the purposes of this tutorial, we'll be going over a PCoA that uses leading log fold change as described in the edgeR documentation to cluster as well as setting a criteria within the same function to derive the PCA values. One benefit that a PCA has is that it can display the percent of variance that is displayed on each axis (i.e. whether or not there is a substantial amount of variance being shown in the analysis)
+A PCA is a subset of PCoA. [Statquest](https://www.youtube.com/user/joshstarmer) has some good videos on [PCoA](https://www.youtube.com/watch?v=FgakZw6K1QQ) and [PCA](https://www.youtube.com/watch?v=HMOI_lkzW08) that discuss differences if you have a few minutes. 
+
+For the purposes of this tutorial, we'll be going over a PCoA that uses leading log fold change (as described in the edgeR documentation) to cluster as well as using the prcomp() function in R to derive the PCA values. One benefit of using a PCA is that it is familiar to many and displays the percent of variance on each axis (i.e. whether or not there is a substantial amount of variance being shown in the analysis). An advantage of using a leading log fold change PCoA is that it specifically uses a metric that has bearing on RNA-seq (i.e. log fold change) to cluster samples.
 
 ## Data source
 
-Data is sourced from Touch et al., 2010. The original data, [pone.0009317.s009.xls](supporting.files/pone.0009317.s009.xls), has been modified with some columns deleted and headers modified as stated in the user guide into [TableS1.txt](supporting.files/TableS1.txt). Data will be run through the edgeR package (case 4.1) through normalization. 
+Data is sourced from Touch et al., 2010. The original data, [pone.0009317.s009.xls](supporting.files/pone.0009317.s009.xls), has been modified with some columns deleted and headers modified into [TableS1.txt](supporting.files/TableS1.txt). TableS1 will be taken through the RNA-seq steps stated in the user guide through normalization, then we will pick up with clustering samples. 
 
-The data used in the file has three paired replicates from normal and cancerous cells. Patients are have numbers associated and cancer vs non-cancer are denoted as "N" or "T"
+The data used in the file has three paired replicates from normal and cancerous cells. Patients have numbers associated and cancer vs non-cancer are denoted as "N" or "T"
 
 ## Loading libraries
 
@@ -220,7 +222,7 @@ Now that we're done with that, lets move onto plotting!
 
 ### PCoA
 ```
-p <- ggplot(pcoa.data1, aes(x = x, y = y, colour = cell.de)) +
+p <- ggplot(pcoa.data, aes(x = x, y = y, colour = cell.de)) +
   geom_point(aes(shape=cell.de, color=cell.de), size = 12) + 
   geom_text_repel(aes(label = patient), size=10, 
                   max.overlaps = Inf, show.legend = FALSE, 
@@ -270,6 +272,10 @@ p <- fviz_eig(pca) +
 ```
 
 <img src="images/pca.scree.png" alt="final pca image" width=400>
+
+## Final Notes
+
+Now, this covers a fairly simple case where we have only two groups, but if you have more than two groups or want to distinguish between the patients (in this example), you can also use different [shapes](http://www.sthda.com/english/wiki/ggplot2-point-shapes) using the shapes aesthetic. For example, you may want to distinguish between treatments by having a shape that is either empty or filled.
 
 ## Citation
 
