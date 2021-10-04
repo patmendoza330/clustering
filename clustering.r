@@ -7,15 +7,10 @@ library(ggplot2)
 library(ggrepel)
 library(factoextra)
 
-wd <- rstudioapi::getSourceEditorContext()$path
-wd1 <- strsplit(wd, "/")
-wd1 <- paste0(wd1[[1]][1:lengths(wd1)-1], collapse = "/")
-knitr::opts_knit$set(root.dir = setwd(wd1))
-
-
-filename1 <- paste0(wd1, '/' , 'pcoa.png')
-filename2 <- paste0(wd1, '/' , 'pca.png')
-filename3 <- paste0(wd1, '/' , 'pca.scree.png')
+wd <- getwd()
+filename1 <- paste0(wd, '/' , 'pcoa.png')
+filename2 <- paste0(wd, '/' , 'pca.png')
+filename3 <- paste0(wd, '/' , 'pca.scree.png')
 
 # BEGIN Block of code is from the edgeR user guide case study 4.1
 rawdata <- read.delim("supporting.files/TableS1.txt", check.names=FALSE, stringsAsFactors=FALSE)

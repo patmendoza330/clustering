@@ -25,7 +25,11 @@ with the PCA associated scree:
 
 A PCA is a subset of PCoA. [Statquest](https://www.youtube.com/user/joshstarmer) has some good videos on [PCoA](https://www.youtube.com/watch?v=FgakZw6K1QQ) and [PCA](https://www.youtube.com/watch?v=HMOI_lkzW08) that discuss differences if you have a few minutes. 
 
-For the purposes of this tutorial, we'll be going over a PCoA that uses leading log fold change (as described in the edgeR documentation) to cluster as well as using the prcomp() function in R to derive the PCA values. One benefit of using a PCA is that it is familiar to many and displays the percent of variance on each axis (i.e. whether or not there is a substantial amount of variance being shown in the analysis). An advantage of using a leading log fold change PCoA is that it specifically uses a metric that has bearing on RNA-seq (i.e. log fold change) to cluster samples.
+For the purposes of this tutorial, we'll be going over a PCoA that uses leading log fold change (as described in the edgeR documentation) to cluster as well as using the prcomp() function in R to derive the PCA values. One benefit of using a *PCA* is that it is familiar to many *and* displays the percent of variance on each axis (i.e. whether or not there is a substantial amount of variance being shown in the analysis). An advantage of using a *leading log fold change PCoA* is that it specifically uses a metric that has bearing on RNA-seq (i.e. log fold change) to cluster samples. You and your reviewers will need to determine which best suits your purposes.
+
+## Running from files in the repository
+
+To run, download the [clustering.r](https://github.com/patmendoza330/clustering/blob/main/clustering.r) and the [supporting.files](https://github.com/patmendoza330/clustering/tree/main/supporting.files) folder.  
 
 ## Data source
 
@@ -219,6 +223,8 @@ percentage
 
 Now that we're done with that, lets move onto plotting!
 ## Plotting 
+
+*Please note:* the size of the font has been optimized for a 1200x1200 plot. If you are running this in RStudio, be sure to adjust the export size, otherwise, text will appear abnormally large in the preview window.
 
 ### PCoA
 ```
